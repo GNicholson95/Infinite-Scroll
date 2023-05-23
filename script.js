@@ -1,16 +1,33 @@
 const imageContainer = document.getElementById('image-container');
 const loader = document.getElementById('loader');
 
+let ready = false;
+let imageLoaded = 0;
+let totalImages = 0;
 let photosArray = [];
 
 // Unsplash API
 const query = 'japan night'
-const count = 10;
+const count = 30;
 const apiKey ='lqAjiBv4OmYA2JF-56kxqb29zfqh9wAJ3Woesu0ne-Q';
 const apiURL = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&query=${query}&count=${count}`
 
+// check if all images was loaded
+function imageLoaded(){
+    console.log(imageLoaded)
+    imageLoaded++;
+    if(imageLoaded === totalImages){
+        ready = true;
+        loader.hidden = true;
+        console.log('ready =', ready);
+    }
+}
+
 // create elements and display them to the DOM
 function displayPhotos() {
+    imageLoaded = 0;
+    totalImages = photosArray.length;
+    console.log('total images', totalImages)
     // run function for each photo in array
     photosArray.forEach((photo) => {
         // create <a> to link to unsplash
@@ -22,6 +39,8 @@ function displayPhotos() {
         img.setAttribute('src', photo.urls.regular);
         img.setAttribute('alt', photo.alt_description);
         img.setAttribute('title', photo.alt_description)
+        // event listener to check when each is loaded
+        img.addEventListener('load', imageLoaded);
         // put <img> inside <a> then put both inside container
         item.appendChild(img);
         imageContainer.appendChild(item);
@@ -35,9 +54,18 @@ async function getPhotos(){
         photosArray = await response.json();
         displayPhotos();
     } catch (error) {
+
         // catch error here
     }
 }
+
+// check to see if scrolling near bottom of page
+window.addEventListener('scroll', () =>{
+    if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000 && ready){
+        ready = false;
+        getPhotos();
+    }
+});
 
 // On load
 getPhotos();
