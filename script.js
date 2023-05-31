@@ -2,7 +2,7 @@ const imageContainer = document.getElementById('image-container');
 const loader = document.getElementById('loader');
 
 let ready = false;
-let imageLoaded = 0;
+let imagesLoaded = 0;
 let totalImages = 0;
 let photosArray = [];
 
@@ -14,9 +14,9 @@ const apiURL = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&quer
 
 // check if all images was loaded
 function imageLoaded(){
-    console.log(imageLoaded)
-    imageLoaded++;
-    if(imageLoaded === totalImages){
+    console.log(imagesLoaded)
+    imagesLoaded++;
+    if(imagesLoaded === totalImages){
         ready = true;
         loader.hidden = true;
         console.log('ready =', ready);
@@ -25,7 +25,7 @@ function imageLoaded(){
 
 // create elements and display them to the DOM
 function displayPhotos() {
-    imageLoaded = 0;
+    imagesLoaded = 0;
     totalImages = photosArray.length;
     console.log('total images', totalImages)
     // run function for each photo in array
